@@ -1,10 +1,4 @@
-//
-//  hist2DMaker.h
-//  
-//
-//  Created by Lucrezia Stella Bruni on 24/09/15.
-//
-//
+
 
 #ifndef ____hist2DMaker__
 #define ____hist2DMaker__

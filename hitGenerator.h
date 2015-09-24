@@ -1,10 +1,4 @@
-//
-//  hitGenerator.h
-//  
-//
-//  Created by Lucrezia Stella Bruni on 18/09/15.
-//
-//
+
 
 #ifndef ____hitGenerator__
 #define ____hitGenerator__

@@ -1,10 +1,4 @@
-//
-//  hitGenerator.cpp
-//  
-//
-//  Created by Lucrezia Stella Bruni on 18/09/15.
-//
-//
+
 
 #include "hitGenerator.h"
 #include "hit_with_charge.h"

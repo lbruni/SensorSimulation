@@ -1,10 +1,3 @@
-//
-//  sensor_response.cpp
-//
-//
-//  Created by Lucrezia Stella Bruni on 21/09/15.
-//
-//
 
 #include "sensor_response.h"
 #include "Rtypes.h"

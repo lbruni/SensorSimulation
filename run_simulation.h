@@ -1,10 +1,4 @@
-//
-//  run_simulation.h
-//
-//
-//  Created by Lucrezia Stella Bruni on 22/09/15.
-//
-//
+
 
 #ifndef ____run_simulation__
 #define ____run_simulation__

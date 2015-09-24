@@ -1,10 +1,3 @@
-//
-//  hist2DMaker.cpp
-//  
-//
-//  Created by Lucrezia Stella Bruni on 24/09/15.
-//
-//
 
 #include "hist2DMaker.h"
 

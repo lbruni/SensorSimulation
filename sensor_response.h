@@ -1,10 +1,3 @@
-//
-//  sensor_response.h
-//
-//
-//  Created by Lucrezia Stella Bruni on 21/09/15.
-//
-//
 
 #ifndef ____sensor_response__
 #define ____sensor_response__

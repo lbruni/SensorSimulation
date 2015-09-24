@@ -1,10 +1,3 @@
-//
-//  run_simulation.cpp
-//
-//
-//  Created by Lucrezia Stella Bruni on 22/09/15.
-//
-//
 
 #include "run_simulation.h"
 
