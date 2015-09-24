@@ -41,7 +41,7 @@ void run_simulation::loop(Int_t numberOfEvents) {
         
         
     }
-    m_HitAndChargeHist.histDrawAndSave(hitDist,ChargeDist);
+  //  m_HitAndChargeHist.histDrawAndSave(hitDist,ChargeDist);
 }
 
 
