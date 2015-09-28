@@ -29,6 +29,7 @@
 #include <cmath>
 #include <TGraph2D.h>
 #include <TMultiGraph.h>
+#include "TRandom2.h"
 
 
 class hitGenerator {

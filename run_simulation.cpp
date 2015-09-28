@@ -18,6 +18,7 @@ void run_simulation::init() {
     m_hitmaker.set_charge(3.6, 1.5);
     m_sensor.set_charge_sharing(sigma);//???<--- now sets the sigma for the gaussian distr of the charge
     
+    m_sensor.init();
     gSystem->MakeDirectory(folder_name);
 }
 

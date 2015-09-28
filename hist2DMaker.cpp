@@ -24,6 +24,10 @@ void hist2DMaker::histDrawAndSave (TH2D* hist0, Int_t i, Double_t pitch_size) {
     gSystem->MakeDirectory(Form("%s/hit%d",folder_name,i));
     
 
+    if (c1)
+    {
+      delete c1;
+    }
     c1= new TCanvas("c1", "hit",1200,600);
     c1 -> Divide(1,2);
     

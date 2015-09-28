@@ -2,6 +2,7 @@
 
 #include "hitGenerator.h"
 #include "hit_with_charge.h"
+#include "TRandom2.h"
 
 
 

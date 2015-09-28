@@ -4,6 +4,15 @@
 
 
 void sensor_response::set_input(const hit_with_charge* inputHits){
+sensor_response::sensor_response() :fgauss(NULL) {
+
+}
+
+sensor_response::~sensor_response() {
+  if (fgauss) {
+    delete fgauss;
+  }
+}
     m_input_hit = inputHits;
 }
 void sensor_response::set_pitch_size(Double_t pitch_size){
@@ -26,10 +35,20 @@ void sensor_response::strips(Int_t min_strip, Int_t max_strip) {
 TF1* sensor_response::GenChargeDistX(Double_t strips_pos) {
     TF1 *fGauss = new TF1("fgauss","gaus",0,strips_pos);
     return fGauss;
+void sensor_response::init() {
+  if (fgauss)
+  {
+    delete fgauss;
+  }
+  fgauss = new TF1("fgauss", "gaus", 0, number_of_strips*m_pitch_size); 
 }
 Double_t sensor_response::charge_computation(Double_t strip_number, Double_t pitch, TF1 *fgauss){
     Double_t strip_int = fgauss->Integral(strip_number*pitch,(strip_number+1)*pitch);
     return strip_int;
+}
+
+TF1* sensor_response::get_fit() {
+  return fgauss;
 }
 void sensor_response::ProcessEvent() {
     
