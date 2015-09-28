@@ -3,8 +3,8 @@
 #ifndef ____run_simulation__
 #define ____run_simulation__
 
-#include <sensor_response.cpp>
-#include <hist2DMaker.cpp>
+#include "sensor_response.cpp"
+#include "hist2DMaker.cpp"
 #include "HitAndChargeHist.cpp"
 
 #define pitch_size  0.074

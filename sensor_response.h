@@ -8,7 +8,6 @@
 class sensor_response {
 public:
     //Stage area
-    
   sensor_response();
   ~sensor_response();
     void set_input(const hit_with_charge* inputHits);
@@ -18,6 +17,8 @@ public:
     void strips(Int_t min_strip, Int_t max_strip);
     void init();
     void ProcessEvent();
+
+
     Double_t strip_position;
     Double_t hit_position;
     Double_t generated_charge;
@@ -28,7 +29,6 @@ public:
     TH1* get_cluster_size();
     TH2* get_cluster_size_VS_positon();
     Double_t strip_int;
-    
     TF1* get_fit();
     
 private:

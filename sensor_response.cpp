@@ -32,9 +32,6 @@ void sensor_response::strips(Int_t min_strip, Int_t max_strip) {
         m_strip_position[i].y = 1;
     }
 }
-TF1* sensor_response::GenChargeDistX(Double_t strips_pos) {
-    TF1 *fGauss = new TF1("fgauss","gaus",0,strips_pos);
-    return fGauss;
 void sensor_response::init() {
   if (fgauss)
   {
@@ -57,7 +54,6 @@ void sensor_response::ProcessEvent() {
     
     for(int i=0; i <=m_strip_position.size(); i++) {
         
-        fgauss = sensor_response::GenChargeDistX(number_of_strips*m_pitch_size);
         fgauss->SetParameters(generated_charge, hit_position,m_sigma);
         
         m_strip_position[i].charge = sensor_response::charge_computation(i, m_pitch_size, fgauss) ;
