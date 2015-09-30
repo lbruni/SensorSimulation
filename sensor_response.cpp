@@ -68,7 +68,7 @@ void sensor_response::ProcessEvent() {
         fgauss->SetParameters(generated_charge, hit_position,m_sigma);
         m_strip_position[i].charge =sensor_response::charge_computation(i, m_pitch_size, fgauss) ;
         strip_int = m_strip_position[i].charge;
-        std::cout<<"  strip:  "<<i<<"   generated charge:   "<<generated_charge<<"   x: "<<m_strip_position[i].x<<" hit position "<<hit_position<<"   charge mV:   "<<strip_int<<" charge fc   "<< m_strip_position[i].charge<<std::endl;
+        std::cout<<"  strip:  "<<i<<"   generated charge:   "<<generated_charge<<"   x: "<<m_strip_position[i].x<<" hit position "<<hit_position<<"   charge mV:   "<< m_digitizer.preAmplifier(m_strip_position[i].charge)<<" charge fc   "<< m_strip_position[i].charge<<std::endl;
     }
     
     
