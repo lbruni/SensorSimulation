@@ -70,10 +70,9 @@ void sensor_response::ProcessEvent() {
         m_strip_position[i].charge = sensor_response::charge_computation(i, m_pitch_size, fgauss) ;
         strip_int = m_strip_position[i].charge;
         
-        std::cout << "  strip:  " << i << "   generated charge:   " << generated_charge << "   x: " << m_strip_position[i].x << " hit position " << hit_position << "   charge mV:   " << m_digitizer.preAmplifier(m_strip_position[i].charge) << " charge fc   " << m_strip_position[i].charge << std::endl;
+        std::cout << "  strip:  " << i << "   generated charge:   " << generated_charge << "   x: " << m_strip_position[i].x << " hit position " << hit_position << " charge fc   " << m_strip_position[i].charge << std::endl;
     }
-    m_digitizer.AnalogReadout(m_strip_position);
-    m_digitizer.BinaryReadout(m_strip_position);
+
 }
 
     const digitizer* sensor_response::get_digitizer() {

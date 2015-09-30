@@ -25,6 +25,7 @@ private:
     sensor_response m_sensor;
     hist2DMaker m_hist2DMaker;
     HitAndChargeHist m_HitAndChargeHist;
+    digitizer m_analog,m_binary;
     Int_t m_strip_min;
     Int_t m_strip_max;
     const hitGenerator* get_hitmaker();

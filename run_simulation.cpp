@@ -20,6 +20,16 @@ void run_simulation::init() {
     m_hitmaker.set_charge(3.6, 1.5);
     m_sensor.set_charge_sharing(sigma);//???<--- now sets the sigma for the gaussian distr of the charge
     m_sensor.init();
+
+   
+    m_analog.set_digits(0.01, 10, 128);
+    m_analog.set_preAmplifier(95);
+    m_analog.set_intput_pointer(m_sensor.get_hit_ptr());
+
+    Double_t threshold = 5;
+    m_binary.set_digits(threshold, threshold, 2);
+    m_binary.set_preAmplifier(95);
+    m_binary.set_intput_pointer(m_sensor.get_hit_ptr());
     gSystem->MakeDirectory(folder_name);
 }
 
@@ -34,7 +44,8 @@ void run_simulation::loop(Int_t numberOfEvents) {
         
         m_hitmaker.ProcessEvent();
         m_sensor.ProcessEvent();
-        
+       m_analog.processEvent();
+       m_binary.processEvent();
        hist = m_hist2DMaker.histMake(m_strip_min, m_strip_max, pitch_size, m_sensor.m_strip_position);
        m_hist2DMaker.histDrawAndSave(hist, i, pitch_size);
        new TCanvas;
