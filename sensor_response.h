@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include "hitGenerator.cpp"
+#include "digitizer.cpp"
 
 class sensor_response {
 public:
@@ -30,15 +31,22 @@ public:
     TH2* get_cluster_size_VS_positon();
     Double_t strip_int;
     TF1* get_fit();
+    Int_t max_strip;
+    Int_t min_strip;
     
 private:
     
     Double_t m_pitch_size;
     Double_t m_sigma;
     
+    
+    digitizer m_digitizer;
+
     std::vector<hit_with_charge> m_hit;
     const hit_with_charge* m_input_hit =nullptr;
     TF1 *fgauss;
-   };
+    const digitizer* get_digitizer();
+  
+};
 
 #endif /* defined(____sensor_response__) */
