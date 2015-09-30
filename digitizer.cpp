@@ -1,45 +1,65 @@
 
 
 #include "digitizer.h"
+#include "TMath.h"
 #define nChannels_Analog 128
 #define nChannels_Binary 2
 #define Charge_min 0
 #define Charge_max 1
 
-Double_t digitizer::preAmplifier(Double_t chargefC){
-    Double_t chargemV;
-    chargemV = 95.0 * chargefC;
-    std::cout<< " charge [fC]:  "<<chargefC<<" charge [mV]:  "<<chargemV<<std::endl;
-    return chargemV;
+
+
+void digitizer::set_intput_pointer(const std::vector<hit_with_charge>* input_pointer) {
+  m_Input_hit = input_pointer;
 }
 
-void digitizer::AnalogReadout( std::vector<hit_with_charge> m_strip_position){
-   
-    canvas = new TCanvas("canvas","canvas",500,500);
-    analog = new TH2D("analog","analog", 100 ,0, 7.32600 , 128 ,0, 1);
-    
-    for(int i=0; i <m_strip_position.size(); i++){
-        
-        if (m_strip_position[i].charge > 0.00005 && m_strip_position[i].charge< 1 ) {
-            
-            analog->Fill(m_strip_position[i].x,m_strip_position[i].charge);
-        }
-    }
-    TH1D *hist0_ProjX = analog->ProjectionY();
-    analog->Draw("colz");
+void digitizer::set_digits(Double_t min_charge, Double_t max_charge, Int_t steps) {
+  
+  m_min = min_charge;
+  m_max = max_charge;
+  m_steps = (max_charge - min_charge)/(Double_t)steps;
 }
 
-void digitizer::BinaryReadout(std::vector<hit_with_charge> m_strip_position){
-    
-    canvas1 = new TCanvas("canvas1","canvas1",500,500);
-    binary = new TH2D("binary","binary",100,0,7.32600, 2,0,1);
-    
-    for(int i=0; i <m_strip_position.size(); i++){
-        
-        if (m_strip_position[i].charge > 0.00005 && m_strip_position[i].charge< 1 ) {
-            
-            binary->Fill(m_strip_position[i].x,m_strip_position[i].charge);
-        }
-        binary->Draw("colz ");
+void digitizer::set_preAmplifier(Double_t Amplification) {
+  m_amplification = Amplification;
+}
+
+void digitizer::processEvent() {
+  m_hit.clear();
+  if (!m_Input_hit)
+  {
+    std::cout << "[digitizer::processEvent()]: input not set correctly " << std::endl;
+    return;
+  }
+
+
+
+  for (size_t i = 0; i < m_Input_hit->size();++i)
+  {
+    auto charge_in_mv = amplify_signal(m_Input_hit->at(i).charge);
+    hit_with_charge charge_digit ;
+    if (charge_in_mv<m_min)
+    {
+      charge_digit.charge = 0;
+    }else if (m_max<=charge_in_mv)
+    {
+      charge_digit.charge = m_max;
+    } else {
+     charge_digit.charge = TMath::Floor((charge_in_mv - m_min) / m_steps) * m_steps + m_min;
     }
+    if (charge_digit.charge>0) {
+      charge_digit.x = m_Input_hit->at(i).x;
+      charge_digit.y = m_Input_hit->at(i).y;
+      m_hit.push_back(charge_digit);
+    }
+  }
+
+}
+
+const std::vector<hit_with_charge>* digitizer::get_hit_ptr() const {
+  return &m_hit;
+}
+
+Double_t digitizer::amplify_signal(Double_t charge_signal) const {
+  return charge_signal*m_amplification;
 }
