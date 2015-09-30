@@ -1,3 +1,4 @@
+
 //
 //  digitizer.h
 //  
@@ -8,8 +9,11 @@
 
 #ifndef ____digitizer__
 #define ____digitizer__
+#include "TCanvas.h"
+#include "Rtypes.h"
+#include <vector>
+#include "hit_with_charge.h"
 
-#include <stdio.h>
 class digitizer {
 public:
     TCanvas *canvas;

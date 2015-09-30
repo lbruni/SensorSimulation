@@ -33,20 +33,21 @@ public:
     TF1* get_fit();
     Int_t max_strip;
     Int_t min_strip;
-    
+
 private:
     
     Double_t m_pitch_size;
     Double_t m_sigma;
     
-    
-    digitizer m_digitizer;
 
+
+    digitizer m_digitizer;
+    
+    
     std::vector<hit_with_charge> m_hit;
     const hit_with_charge* m_input_hit =nullptr;
     TF1 *fgauss;
     const digitizer* get_digitizer();
-  
-};
+   };
 
 #endif /* defined(____sensor_response__) */

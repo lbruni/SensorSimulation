@@ -1,5 +1,6 @@
 
 #include "hist2DMaker.h"
+#include "TSystem.h"
 
 TH2D *hist2DMaker::histMake (Int_t strip_min, Int_t strip_max, Double_t pitch_size, std::vector<hit_with_charge> m_strip_position) {
 
