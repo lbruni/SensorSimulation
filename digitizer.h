@@ -21,7 +21,7 @@ public:
     Double_t preAmplifier(Double_t chargefC);
     Double_t chargemV;
     void BinaryReadout(std::vector<hit_with_charge> m_strip_position);
-    void AlibavaReadout( std::vector<hit_with_charge> m_strip_position);
+    void AnalogReadout( std::vector<hit_with_charge> m_strip_position);
     
     Int_t hit_binary;
     

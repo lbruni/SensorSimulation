@@ -13,7 +13,7 @@ Double_t digitizer::preAmplifier(Double_t chargefC){
     return chargemV;
 }
 
-void digitizer::AlibavaReadout( std::vector<hit_with_charge> m_strip_position){
+void digitizer::AnalogReadout( std::vector<hit_with_charge> m_strip_position){
    
     canvas = new TCanvas("canvas","canvas",500,500);
     analog = new TH2D("analog","analog", 100 ,0, 7.32600 , 128 ,0, 1);

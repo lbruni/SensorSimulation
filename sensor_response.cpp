@@ -64,16 +64,16 @@ void sensor_response::ProcessEvent() {
     generated_charge = m_input_hit->charge;
     
     for(int i=0; i <m_strip_position.size(); i++) {
-      
+        
         fgauss->SetParameters(generated_charge, hit_position,m_sigma);
         m_strip_position[i].charge =sensor_response::charge_computation(i, m_pitch_size, fgauss) ;
         strip_int = m_strip_position[i].charge;
         std::cout<<"  strip:  "<<i<<"   generated charge:   "<<generated_charge<<"   x: "<<m_strip_position[i].x<<" hit position "<<hit_position<<"   charge mV:   "<<strip_int<<" charge fc   "<< m_strip_position[i].charge<<std::endl;
     }
     
-
-m_digitizer.AlibavaReadout(m_strip_position);
-     m_digitizer.BinaryReadout(m_strip_position);
+    
+    m_digitizer.AnalogReadout(m_strip_position);
+    m_digitizer.BinaryReadout(m_strip_position);
 }
 
 const digitizer* sensor_response::get_digitizer(){
