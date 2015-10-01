@@ -3,7 +3,7 @@
 void run(){
     run_simulation r;
     r.init();
-    r.loop(2);
+    r.loop(1);
     
     
 }

@@ -7,6 +7,7 @@
 #include "hist2DMaker.cpp"
 #include "HitAndChargeHist.cpp"
 
+
 #define pitch_size  0.074
 #define sigma  pitch_size*5
 class run_simulation {
@@ -24,6 +25,7 @@ private:
     hitGenerator m_hitmaker;
     sensor_response m_sensor;
     hist2DMaker m_hist2DMaker;
+        
     HitAndChargeHist m_HitAndChargeHist;
     Int_t m_strip_min;
     Int_t m_strip_max;
