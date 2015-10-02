@@ -1,12 +1,5 @@
-
-
 #include "digitizer.h"
 #include "TMath.h"
-#define nChannels_Analog 128
-#define nChannels_Binary 2
-#define Charge_min 0
-#define Charge_max 1
-
 
 
 void digitizer::set_intput_pointer(const std::vector<hit_with_charge>* input_pointer) {
@@ -32,12 +25,12 @@ void digitizer::processEvent() {
     return;
   }
 
-
-
+    m_charge_digitized.resize( m_Input_hit->size());
+    
   for (size_t i = 0; i < m_Input_hit->size();++i)
   {
     auto charge_in_mv = amplify_signal(m_Input_hit->at(i).charge);
-    hit_with_charge charge_digit ;
+
     if (charge_in_mv<m_min)
     {
       charge_digit.charge = 0;
@@ -52,7 +45,13 @@ void digitizer::processEvent() {
       charge_digit.y = m_Input_hit->at(i).y;
       m_hit.push_back(charge_digit);
     }
-  }
+      
+      
+          m_charge_digitized[i].x = charge_digit.x;
+          m_charge_digitized[i].charge = charge_digit.charge;
+          
+      
+}
 
 }
 
