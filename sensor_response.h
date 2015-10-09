@@ -9,8 +9,8 @@
 class sensor_response {
 public:
     //Stage area
-  sensor_response();
-  ~sensor_response();
+    sensor_response();
+    ~sensor_response();
     void set_input(const hit_with_charge* inputHits);
     void set_pitch_size(Double_t pitch_size);
     void set_charge_sharing(Double_t sigma);
@@ -18,8 +18,8 @@ public:
     void strips(Int_t min_strip, Int_t max_strip);
     void init();
     void ProcessEvent();
-
-
+    
+    
     Double_t strip_position;
     Double_t hit_position;
     Double_t generated_charge;
@@ -33,14 +33,14 @@ public:
     TF1* get_fit();
     Int_t max_strip;
     Int_t min_strip;
-
+    
 private:
     
     Double_t m_pitch_size;
     Double_t m_sigma;
     
-
-
+    
+    
     digitizer m_digitizer;
     
     
@@ -48,6 +48,6 @@ private:
     const hit_with_charge* m_input_hit =nullptr;
     TF1 *fgauss;
     const digitizer* get_digitizer();
-   };
+};
 
 #endif /* defined(____sensor_response__) */

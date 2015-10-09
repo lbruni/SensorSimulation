@@ -3,7 +3,7 @@
 #include "TSystem.h"
 
 TH2D *hist2DMaker::histMake (Int_t strip_min, Int_t strip_max, Double_t pitch_size, std::vector<hit_with_charge> m_strip_position) {
-
+    
     hist = new TH2D("hist", "Charge density ", m_strip_position.size(), (strip_min*pitch_size), (strip_max*pitch_size), 1, 0, 1);
     hist->GetXaxis()->SetTitle("position [mm]");
     hist->GetYaxis()->SetTitle("Charge density / strip");
@@ -11,12 +11,12 @@ TH2D *hist2DMaker::histMake (Int_t strip_min, Int_t strip_max, Double_t pitch_si
     
     
     for(int j = 0; j<m_strip_position.size(); j++){
-    
-   hist->Fill(m_strip_position[j].x+pitch_size*0.5,0.5,m_strip_position[j].charge);
-        }
+        
+        hist->Fill(m_strip_position[j].x+pitch_size*0.5,0.5,m_strip_position[j].charge);
+    }
     return hist;
     
-   }
+}
 
 
 
@@ -24,10 +24,10 @@ void hist2DMaker::histDrawAndSave (TH2D* hist0, Int_t i, Double_t pitch_size) {
     
     gSystem->MakeDirectory(Form("%s/hit%d",folder_name,i));
     
-
+    
     if (c1)
     {
-      delete c1;
+        delete c1;
     }
     c1= new TCanvas("c1", "hit",1200,600);
     c1 -> Divide(1,2);

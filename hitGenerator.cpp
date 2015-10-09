@@ -18,20 +18,16 @@ void hitGenerator::set_strips (Int_t a, Int_t b) {
 }
 
 
-void hitGenerator::set_charge (Double_t mpv, Double_t st_dev) {
-    if( mpv > 0 && st_dev > 0){
-        mu = mpv;
-        sigma = st_dev;
-        rGauss = new TRandom2();
-        rGauss->SetSeed(0); //initialize the seed (0 sets it differently every time)
-    }
-    else{std::cout<<"Error! Invalid mpv/st_dev"<<std::endl;}
+void hitGenerator::set_charge (TF1 *f) {
+    gRandom->SetSeed(0) ;
+    charge = f->GetRandom();
 }
+
 
 
 void hitGenerator::ProcessEvent() {
     
-    m_hit.charge = rGauss->Gaus(mu, sigma);
+    m_hit.charge = charge;
     generated_charge = m_hit.charge;
     
     m_hit.x= rLinear->Uniform(start, end);
