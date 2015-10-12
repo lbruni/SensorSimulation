@@ -111,13 +111,13 @@ void run_simulation::loop(Int_t numberOfEvents) {
 void run_simulation::LoopOnSigma() {
     sigma = 0;
     
-    TH2D * sigma_cluster = new TH2D("sigma_cluster","",40, 0.0 , 0.156 , 10, 0.0, 12);
+    TH2D * sigma_cluster = new TH2D("sigma_cluster","",52, 0.0 , 0.1 , 10, 0.0, 10);
     for(int ev =0 ; ev< 1000; ev++){
         Int_t ipri = (Int_t)(1000 / 10);
         if (ev % ipri == 0) std::cout << "INFO ::    >>  " << ev  << "/" << 1000 << "..." << std::endl;
-        for (int k=1; k<=40; k++) {
+        for (int k=1; k<=52; k++) {
             
-            sigma = pitch_size * (0.05*k);
+            sigma = pitch_size * (0.025*k);
             
             run_simulation::init();
             run_simulation::loop(1);
@@ -130,6 +130,7 @@ void run_simulation::LoopOnSigma() {
     sigma_cluster->GetXaxis()->SetTitle("sigma [mm]");
     sigma_cluster->GetYaxis()->SetTitle("cluster size");
     sigma_cluster->Draw("colz");
+    sigma_cluster->SaveAs("Sigma_cluster.root");
 }
 
 const hitGenerator* run_simulation::get_hitmaker(){
