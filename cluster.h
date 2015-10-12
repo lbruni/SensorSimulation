@@ -11,10 +11,6 @@ public:
     void  set_intput_pointer_digitizer(const std::vector<hit_with_charge>* input_pointer);
     void FindClusterNumber();
     void processEvent();
-    void getHitPosition(Double_t hit_pos);
-    void getHitCharge(Double_t charge);
-    Double_t m_hit_position;
-    
     
 private:
     const std::vector<hit_with_charge>*  m_digitized_hit;

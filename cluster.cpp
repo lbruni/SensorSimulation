@@ -16,8 +16,6 @@ void cluster::FindClusterNumber(){
     }
     
 }
-void cluster::getHitPosition(Double_t hit_pos){
-    m_hit_position = hit_pos;
 }
 void cluster::processEvent() {
 }
