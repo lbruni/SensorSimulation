@@ -23,6 +23,10 @@ void run_simulation::get_landau(){
 }
 void run_simulation::init() {
     
+    run_simulation::get_landau();
+
+    m_hitmaker.set_charge_distribution(f);
+
     m_sensor.set_pitch_size(pitch_size);
     m_sensor.set_input(m_hitmaker.get_hit_ptr());
     run_simulation::Strips_under_study(0 ,99);
@@ -56,12 +60,10 @@ void run_simulation::loop(Int_t numberOfEvents) {
    // clus2= new TH2D("clus2","h22", 120, 0,0, 10, 0, 0);
     
     
-    run_simulation::get_landau();
-    
-    
+
     for (Int_t i = 0; i < numberOfEvents; ++i) {
         
-        m_hitmaker.set_charge(f);
+
         m_hitmaker.ProcessEvent();
         m_sensor.ProcessEvent();
         // m_analog.processEvent();
@@ -79,8 +81,8 @@ void run_simulation::loop(Int_t numberOfEvents) {
         //  m_HitAndChargeHist.FillHisto(ChargeDist,m_sensor.generated_charge);
         
         //**cluster studies
-        m_cluster.getHitPosition(m_sensor.hit_position);
-        m_cluster.FindClusterNumber();
+       
+        m_cluster.processEvent();
         
         //*** Fill of histos on cluster size vs strip number/charge ***
         //clus->Fill(fmod((m_cluster.m_hit_position)/pitch_size,3), m_cluster.cont);
@@ -123,7 +125,7 @@ void run_simulation::LoopOnSigma() {
             run_simulation::loop(1);
                 //std::cout<<"Event number:  "<<ev<<" Sigma: "<<sigma<<" Cluster size: "<<m_cluster.cont<<std::endl;
             
-            sigma_cluster->Fill(sigma, m_cluster.cont);
+            sigma_cluster->Fill(sigma, m_cluster.get_cluster_size());
             
         }
     }
