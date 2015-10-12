@@ -1,10 +1,18 @@
 
 #include "run_simulation.cpp"
+#include "TApplication.h"
+#include "TBrowser.h"
 
 int main() {
+  int argc_asdasddsa = 1;
+  char **argv_sadsda = new char*[1];
+  argv_sadsda[0] = "dummy";
+  TApplication theApp("App", &argc_asdasddsa, argv_sadsda);
+
     run_simulation r;
-    r.init();
-    r.loop(60000);
+    r.LoopOnSigma();
+    new TBrowser();
+    theApp.Run();
     return 0;
 }
 void run(){
