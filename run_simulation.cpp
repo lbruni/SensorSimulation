@@ -135,22 +135,8 @@ void run_simulation::LoopOnSigma() {
   pro->Draw("same");
 }
 
-void run_simulation::processEvent() {
-  m_sigma_cluster->Fill(sigma, m_cluster.get_cluster_size());
-}
 
-const hitGenerator* run_simulation::get_hitmaker() {
-  return &m_hitmaker;
-}
-const sensor_response* run_simulation::get_sensor() {
-  return &m_sensor;
-}
-const hist2DMaker* run_simulation::get_hist2DMaker() {
-  return &m_hist2DMaker;
-}
-const HitAndChargeHist* run_simulation::get_HitAndChargeHist() {
-  return &m_HitAndChargeHist;
-}
-const cluster* run_simulation::get_cluster() {
-  return &m_cluster;
+
+void run_cluster_size_simulation::processEvent() {
+  m_sigma_cluster->Fill(sigma, m_cluster.get_cluster_size());
 }
