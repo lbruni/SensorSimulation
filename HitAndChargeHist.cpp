@@ -26,13 +26,13 @@ TH1D* HitAndChargeHist::FillHisto(TH1D*h, Double_t var){
 
 void HitAndChargeHist::histDrawAndSave (TH1D* hist0, TH1D* hist1) {
     
-
+    
     c1= new TCanvas("c1", "hit",1200,600);
     c1 -> Divide(1,2);
     
     c1->cd(1);
     hist0->Draw("");
-   // gStyle->SetOptStat(0);
+    // gStyle->SetOptStat(0);
     
     c1->cd(2);
     

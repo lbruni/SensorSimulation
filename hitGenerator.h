@@ -36,27 +36,21 @@ class hitGenerator {
 public:
     
     void set_strips(Int_t a, Int_t b);
-    void set_charge(TF1 *f);
+    void set_charge_distribution(TF1 *f);
     const hit_with_charge* get_hit_ptr();
     
     void ProcessEvent();
-    Double_t charge;
-    TH1* get_position_distribution();
-    TH1* get_charge_distribution();
+
     TH1D *hist;
     TCanvas *c1;
-    Double_t x_position;
-    Double_t generated_charge;
     
 private:
     
     hit_with_charge m_hit;
     TRandom2 *rLinear;
-    TRandom2 *rGauss;
+    TF1* m_charge_dist = nullptr;
     Double_t start;
     Double_t end;
-    Double_t mu;
-    Double_t sigma;
     
     
 };

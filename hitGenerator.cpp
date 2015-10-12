@@ -18,20 +18,18 @@ void hitGenerator::set_strips (Int_t a, Int_t b) {
 }
 
 
-void hitGenerator::set_charge (TF1 *f) {
-    gRandom->SetSeed(0) ;
-    charge = f->GetRandom();
+void hitGenerator::set_charge_distribution(TF1 *f) {
+  gRandom->SetSeed(0);
+  m_charge_dist = f;
 }
 
 
 
 void hitGenerator::ProcessEvent() {
     
-    m_hit.charge = charge;
-    generated_charge = m_hit.charge;
-    
+    m_hit.charge = m_charge_dist->GetRandom();
+       
     m_hit.x= rLinear->Uniform(start, end);
-    x_position  = m_hit.x ;
     
 }
 
