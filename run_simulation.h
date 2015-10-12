@@ -26,7 +26,7 @@ public:
     void init();
     void loop(Int_t numberOfEvents);
     void LoopOnSigma() ;
-   
+    virtual  void processEvent(); 
 private:
     hitGenerator m_hitmaker;
     sensor_response m_sensor;
@@ -37,6 +37,8 @@ private:
     Int_t m_strip_min;
     Int_t m_strip_max;
 
+protected:
+  TH2D * m_sigma_cluster = nullptr;
     const hitGenerator* get_hitmaker();
     const sensor_response* get_sensor();
     const hist2DMaker* get_hist2DMaker();
