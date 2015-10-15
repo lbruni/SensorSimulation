@@ -46,15 +46,6 @@ void sensor_response::strips(Int_t min_strip, Int_t max_strip) {
 }
 
 void sensor_response::init() {
-<<<<<<< HEAD
-    if (fgauss)
-    {
-        delete fgauss;
-    }
-    fgauss = new TF1("fgauss", "gaus", m_min_strip*m_pitch_size, m_max_strip*m_pitch_size);
-=======
-
->>>>>>> de29fa5c828cb1589a93742be8a8a9955d836991
 }
 
 
@@ -71,20 +62,9 @@ void sensor_response::ProcessEvent() {
 
     
     for(int i=0; i <m_strip_position.size(); i++) {
-<<<<<<< HEAD
-        
-        
-        fgauss->SetParameters(m_input_hit->charge, hit_position, m_sigma);
-        m_strip_position[i].charge = charge_computation(i, m_pitch_size) ;
-    }
-    
-    
-=======
-      
       m_strip_position[i].charge = m_input_hit->charge*charge_computation(i);
     }
    
->>>>>>> de29fa5c828cb1589a93742be8a8a9955d836991
 }
 
 const digitizer* sensor_response::get_digitizer() {
