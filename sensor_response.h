@@ -24,8 +24,8 @@ public:
   
 
    
-    Double_t charge_computation(Double_t strip_number, Double_t pitch);
-    TF1* get_fit();
+    Double_t charge_computation(Double_t strip_number);
+
     
 private:
     std::vector<hit_with_charge> m_strip_position;
@@ -42,7 +42,7 @@ private:
     
     std::vector<hit_with_charge> m_hit;
     const hit_with_charge* m_input_hit =nullptr;
-    TF1 *fgauss;
+   
     const digitizer* get_digitizer();
 };
 
