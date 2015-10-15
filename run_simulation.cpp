@@ -1,8 +1,9 @@
 
-#include "run_simulation.h"
+
 #include "TSystem.h"
 #include "TH1D.h"
 #include "TProfile.h"
+#include "run_simulation.h"
 
 void run_simulation::Strips_under_study(Int_t min_strip, Int_t max_strip) {
 
@@ -17,8 +18,7 @@ void run_simulation::get_landau() {
   TFile *_file0 = TFile::Open("landau.root");
   f = (TF1*)_file0->Get("land");
   _file0->Close();
-  //f->SetParameters(0.224,3.543,240.635,0.462);
-  // f->Draw();
+    
 
 }
 void run_simulation::init() {
@@ -37,9 +37,7 @@ void run_simulation::init() {
   m_analog.set_digits(0.01, 10, 128);
   m_analog.set_preAmplifier(95);
   m_analog.set_intput_pointer(m_sensor.get_hit_ptr());
-
-
-  Double_t threshold = 1;
+  
   m_binary.set_digits(threshold, threshold, 2);
   m_binary.set_preAmplifier(95);
   m_binary.set_intput_pointer(m_sensor.get_hit_ptr());
@@ -58,17 +56,20 @@ void run_simulation::loop(Int_t numberOfEvents) {
   //*** Declaration of histos on cluster size vs strip number/charge ***
   // clus= new TH2D("clus","h2", 120, 0,3, 20, 0, 20);
   // clus2= new TH2D("clus2","h22", 120, 0,0, 10, 0, 0);
-
-
-
+   
+    Int_t nullclusters = 0;
+    
+    
   for (Int_t i = 0; i < numberOfEvents; ++i) {
 
 
     m_hitmaker.ProcessEvent();
     m_sensor.ProcessEvent();
-    // m_analog.processEvent();
+    //m_analog.processEvent();
     m_binary.processEvent();
-
+     
+      
+     
     //*** hit and cloud charge histograms ***
     // hist = m_hist2DMaker.histMake(m_strip_min, m_strip_max, pitch_size, m_sensor.m_strip_position);
     // m_hist2DMaker.histDrawAndSave(hist, i, pitch_size);
@@ -84,12 +85,27 @@ void run_simulation::loop(Int_t numberOfEvents) {
 
     m_cluster.processEvent();
 
-    //*** Fill of histos on cluster size vs strip number/charge ***
+     //  std::cout<<" get Cluster size:  "<<m_cluster.get_cluster_size()<<std::endl;
+      
+      
+      if(m_cluster.get_cluster_size() == 0){
+          nullclusters++;
+          
+      }
+          //*** Fill of histos on cluster size vs strip number/charge ***
     //clus->Fill(fmod((m_cluster.m_hit_position)/pitch_size,3), m_cluster.cont);
     //clus2->Fill(m_sensor.strip_int, m_cluster.cont);
-    processEvent();
-
+    //processEvent();
+      
+    
   }
+
+    
+    Efficiency =  run_simulation::calculateEfficiency(numberOfEvents, nullclusters);
+    std::cout<<" Threshold: "<< threshold <<" Efficiency:  "<<Efficiency<<std::endl;
+    //std::cout<<"Efficiency:   "<<Efficiency<<" Cluster zero: "<<nullclusters<<std::endl;
+    
+
   //*** Draw histos on cluster size vs strip number/charge ***
   //        cluster_canvas = new TCanvas("cluster_canvas","cluster",3000, 500);
   //        cluster_canvas->Divide(2,1);
@@ -107,12 +123,12 @@ void run_simulation::loop(Int_t numberOfEvents) {
   //
   //*** Draw hit and cloud charge histograms ***
   // m_HitAndChargeHist.histDrawAndSave(hitDist,ChargeDist);
-}
+  }
 
 //*** Loop on sigma-- Fills an histo of cluster size vs sigma***
 void run_simulation::LoopOnSigma() {
 
-  const double min_sigma = 0.0001,max_sigma =0.1;
+  const double min_sigma = 0.0001,max_sigma = 0.1;
 
   sigma = min_sigma; 
 
@@ -120,31 +136,7 @@ void run_simulation::LoopOnSigma() {
   for (; sigma <= 0.1; sigma += min_sigma) {
 
     
-<<<<<<< HEAD
-    TH2D * sigma_cluster = new TH2D("sigma_cluster","",52, 0.0 , 0.1 , 10, 0.0, 10);
-    for(int ev =0 ; ev< 1000; ev++){
-        Int_t ipri = (Int_t)(1000 / 10);
-        if (ev % ipri == 0) std::cout << "INFO ::    >>  " << ev  << "/" << 1000 << "..." << std::endl;
-        for (int k=1; k<=52; k++) {
-            
-            sigma = pitch_size * (0.025*k);
-            
-            run_simulation::init();
-            run_simulation::loop(1);
-                //std::cout<<"Event number:  "<<ev<<" Sigma: "<<sigma<<" Cluster size: "<<m_cluster.cont<<std::endl;
-            
-            sigma_cluster->Fill(sigma, m_cluster.cont);
-            
-        }
-    }
-    sigma_cluster->GetXaxis()->SetTitle("sigma [mm]");
-    sigma_cluster->GetYaxis()->SetTitle("cluster size");
-    sigma_cluster->Draw("colz");
-    sigma_cluster->SaveAs("Sigma_cluster.root");
-}
-=======
     std::cout<<" Sigma: "<<sigma<<std::endl;
->>>>>>> 2304e45d7dec486207930e011c2bb7e83a793bc8
 
     run_simulation::init();
     run_simulation::loop(1000);
@@ -160,7 +152,50 @@ void run_simulation::LoopOnSigma() {
 }
 
 
+Double_t run_simulation::calculateEfficiency(Double_t n_events, Double_t n_null_clusters){
+    Double_t eff;
+    eff = 1-(n_null_clusters / n_events);
 
-void run_cluster_size_simulation::processEvent() {
-  m_sigma_cluster->Fill(sigma, m_cluster.get_cluster_size());
+   // std::cout<<" null clusters:  "<<n_null_clusters<<" n_events  "<<n_events<<" eff:  "<<eff<< std::endl;
+    return eff;
 }
+
+void run_simulation::run_efficiency(){
+    m_scan = new TGraph(16);
+
+    Double_t thres[16] = {   67.6,
+    109.8,
+    151.7,
+    193.2,
+    234.6,
+    275.9,
+    289.6,
+    357.8,
+    397.8,
+    435.8,
+    471.2,
+    504.0,
+    533.1,
+    555.9,
+    572.4,
+    584.6};
+   
+    for (int i = 0 ; i<16; i++){
+        threshold = thres[i];
+        run_simulation::init();
+        run_simulation::loop(1000);
+        m_scan->SetPoint(i, thres[i], Efficiency);
+    }
+    
+    scan = new TCanvas("scan", "",500,500);
+    m_scan->GetXaxis()->SetTitle("Threshold [mV]");
+    m_scan->GetYaxis()->SetTitle("Efficiency");
+    m_scan->SetTitle("Efficiency vs Threshold");
+    m_scan->Draw("AP*");
+    scan->SaveAs("Scurve.root");
+    scan->SaveAs("Scurve.pdf");
+}
+
+//void run_cluster_size_simulation::processEvent() {
+//      m_sigma_cluster->Fill(sigma, m_cluster.get_cluster_size());
+//}

@@ -37,7 +37,7 @@ void sensor_response::strips(Int_t min_strip, Int_t max_strip) {
         m_strip_position[i].x = i*m_pitch_size +m_min_strip*m_pitch_size;
         m_strip_position[i].y = 1;
     }
-
+    
 }
 
 void sensor_response::init() {
@@ -45,7 +45,7 @@ void sensor_response::init() {
     {
         delete fgauss;
     }
-    fgauss = new TF1("fgauss", "gaus", m_max_strip*m_pitch_size, m_max_strip*m_pitch_size);
+    fgauss = new TF1("fgauss", "gaus", m_min_strip*m_pitch_size, m_max_strip*m_pitch_size);
 }
 
 
@@ -65,10 +65,10 @@ void sensor_response::ProcessEvent() {
     for(int i=0; i <m_strip_position.size(); i++) {
         
         
-      fgauss->SetParameters(m_input_hit->charge, hit_position, m_sigma);
-        
+        fgauss->SetParameters(m_input_hit->charge, hit_position, m_sigma);
         m_strip_position[i].charge = charge_computation(i, m_pitch_size) ;
     }
+    
     
 }
 
