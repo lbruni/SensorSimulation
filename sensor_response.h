@@ -18,9 +18,10 @@ public:
     void strips(Int_t min_strip, Int_t max_strip);
     void init();
     void ProcessEvent();
-    
-    
-
+    Double_t hit_position;
+    Double_t strip_int;
+    Double_t generated_charge;
+    Double_t pos_x;
   
 
    

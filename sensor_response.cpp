@@ -39,7 +39,7 @@ void sensor_response::strips(Int_t min_strip, Int_t max_strip) {
     m_strip_position.resize(number_of_strips);
     
     for (int i = 0; i <number_of_strips; ++i) {
-        m_strip_position[i].x = i +m_min_strip;
+        m_strip_position[i].x = (i +m_min_strip)*m_pitch_size;
         m_strip_position[i].y = 1;
     }
     
@@ -50,7 +50,7 @@ void sensor_response::init() {
 
 
 Double_t sensor_response::charge_computation(Double_t strip_number){
-  Double_t strip_int = errf(strip_number+1, m_input_hit->x, m_sigma) - errf(strip_number, m_input_hit->x, m_sigma) ;
+  Double_t strip_int = errf( (strip_number+1)*m_pitch_size, (m_input_hit->x)*m_pitch_size, m_sigma) - errf((strip_number)*m_pitch_size, (m_input_hit->x)*m_pitch_size, m_sigma) ;
     return strip_int;
 }
 
@@ -58,11 +58,14 @@ Double_t sensor_response::charge_computation(Double_t strip_number){
 
 void sensor_response::ProcessEvent() {
     
-    auto hit_position = (m_input_hit->x);
-
+    hit_position = (m_input_hit->x)*m_pitch_size;
+    generated_charge =  m_input_hit->charge;
     
     for(int i=0; i <m_strip_position.size(); i++) {
       m_strip_position[i].charge = m_input_hit->charge*charge_computation(i);
+        strip_int = m_strip_position[i].charge;
+        pos_x =  m_strip_position[i].x ;
+     // std::cout<< "hit x: "<<hit_position<<" posx   "<<pos_x<<"   charge tot:  "<<m_input_hit->charge<<" integrated charge:  "<<charge_computation(i)<<std::endl;
     }
    
 }
