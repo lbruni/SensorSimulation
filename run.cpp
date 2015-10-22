@@ -16,11 +16,11 @@
 ////    return 0;
 //}
 void run(){
-    run_simulation r;
-    //run_cluster_size_simulation r;
-    //r.LoopOnSigma();
-    r.init();
-    r.loop(60000);
+    //run_simulation r;
+    run_cluster_size_simulation r;
+    r.LoopOnSigmaChiSquare();
+    //r.init();
+    //r.loop(600);
     //r.run_efficiency();
     
 }

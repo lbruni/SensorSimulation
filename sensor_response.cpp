@@ -50,7 +50,7 @@ void sensor_response::init() {
 
 
 Double_t sensor_response::charge_computation(Double_t strip_number){
-  Double_t strip_int = errf( (strip_number+1)*m_pitch_size, (m_input_hit->x)*m_pitch_size, m_sigma) - errf((strip_number)*m_pitch_size, (m_input_hit->x)*m_pitch_size, m_sigma) ;
+  Double_t strip_int = errf( (strip_number+0.5)*m_pitch_size, (m_input_hit->x)*m_pitch_size, m_sigma) - errf((strip_number-0.5)*m_pitch_size, (m_input_hit->x)*m_pitch_size, m_sigma) ;
     return strip_int;
 }
 
