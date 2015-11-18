@@ -12,7 +12,7 @@ TH1D* HitAndChargeHist::histHitDist () {
 
 TH1D* HitAndChargeHist::histChargeDist () {
     
-    hist0 = new TH1D("hist0", "Generated Charge ", 100,0,10);
+    hist0 = new TH1D("hist0", "Generated Charge ", 100,0,20);
     hist0->GetXaxis()->SetTitle("charge");
     
     
@@ -25,8 +25,10 @@ TH1D* HitAndChargeHist::FillHisto(TH1D*h, Double_t var){
 }
 
 void HitAndChargeHist::histDrawAndSave (TH1D* hist0, TH1D* hist1) {
-    
-    
+    TFile *pippo = new TFile("GeneratedDistr.root","RECREATE");
+    hist0->Write();
+    hist1->Write();
+    pippo->Close();
     c1= new TCanvas("c1", "hit",1200,600);
     c1 -> Divide(1,2);
     
