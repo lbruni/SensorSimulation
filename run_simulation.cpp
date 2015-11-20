@@ -46,13 +46,19 @@ void run_simulation::init() {
     m_sensor.init();
     
     m_res.set_intput_pointer(m_sensor.get_hit_ptr());
+    m_res.Gaussian_random();
+   
     m_analog.set_digits(0.01, 10, 128);
     m_analog.set_preAmplifier(95);
     m_analog.set_intput_pointer(m_res.get_hit_ptr());
+    
     threshold = 67.572;//109.8;//193.2;//151.636;//67.572;//////70;
+    
     m_binary.set_digits(threshold, threshold, 2);
     m_binary.set_preAmplifier(95);
     m_binary.set_intput_pointer(m_sensor.get_hit_ptr());
+    
+    
     gSystem->MakeDirectory(folder_name);
     m_cluster.set_intput_pointer_digitizer(m_binary.digitizer::get_hit_ptr());
     

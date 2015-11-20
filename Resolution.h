@@ -10,12 +10,12 @@ public:
     
     void set_intput_pointer(const std::vector<hit_with_charge>* input_pointer);
     void processEvent();
-    Double_t Gaussian_random(Double_t x);
+    void Gaussian_random();
     const std::vector<hit_with_charge>* get_hit_ptr() const;
     
     std::vector<hit_with_charge> m_charge_resolution;
     hit_with_charge charge_res ;
-
+    TRandom2 *rGauss;
 
 private:
     std::vector<hit_with_charge> m_hit;
