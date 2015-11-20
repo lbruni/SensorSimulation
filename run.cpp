@@ -21,7 +21,7 @@ void run(){
     //r.LoopOnSigmaChiSquare();
     r.openfiles();
     r.init();
-    r.loop(1000000);
-    //r.run_efficiency();
+    r.loop(10000);
+//    r.run_efficiency();
     
 }

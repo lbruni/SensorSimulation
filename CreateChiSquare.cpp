@@ -10,7 +10,7 @@ void CreateChiSquare::GetDataHisto(TH1D *data){
 Double_t CreateChiSquare::getDistributions(TProfile * sim, Int_t nbin){
     m_chi = 0;
     
-    for(Int_t j= 1 ; j<=nbin; j++){
+    for(Int_t j= 0 ; j<nbin; j++){
         y = sim->GetBinContent(j);
         x = m_data_pfx->GetBinContent(j);
         
@@ -19,7 +19,7 @@ Double_t CreateChiSquare::getDistributions(TProfile * sim, Int_t nbin){
             
             diff = CreateChiSquare::getChiSquare(x,y);
             m_chi +=diff;
-            //std::cout<<"bin:  "<<j<<" sim:  "<<y<<"  data:  "<<x<<"  diff inside loop: "<<diff<<" m_chi inside loop:  "<<m_chi<<std::endl;
+          //  std::cout<<"bin:  "<<j<<" sim:  "<<y<<"  data:  "<<x<<"  diff inside loop: "<<diff<<" m_chi inside loop:  "<<m_chi<<std::endl;
             
         }
     }

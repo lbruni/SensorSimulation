@@ -9,6 +9,7 @@
 #include "cluster.cpp"
 #include "TGraphErrors.h"
 #include "CreateChiSquare.cpp"
+#include "Resolution.cpp"
 #include "TAttMarker.h"
 #include "TAttLine.h"
 #include "THistPainter.h"
@@ -28,7 +29,7 @@ public:
     void LoopOnSigmaChiSquare();
     Double_t calculateEfficiency(Double_t n_events, Double_t n_null_clusters);
     Double_t calculateErrorEfficiency(Double_t n_events, Double_t eff);
-    Double_t sigma = 0.009;
+    Double_t sigma = 0.01;
     Double_t threshold;
     
     void run_efficiency();
@@ -42,6 +43,7 @@ protected:
     HitAndChargeHist m_HitAndChargeHist;
     digitizer m_analog,m_binary;
     cluster m_cluster;
+    Resolution m_res;
     
     CreateChiSquare m_chisquare;
     Int_t m_strip_min;

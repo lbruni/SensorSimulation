@@ -45,19 +45,17 @@ void run_simulation::init() {
     m_sensor.set_charge_sharing(sigma);
     m_sensor.init();
     
-    
+    m_res.set_intput_pointer(m_sensor.get_hit_ptr());
     m_analog.set_digits(0.01, 10, 128);
     m_analog.set_preAmplifier(95);
-    m_analog.set_intput_pointer(m_sensor.get_hit_ptr());
+    m_analog.set_intput_pointer(m_res.get_hit_ptr());
     threshold = 67.572;//109.8;//193.2;//151.636;//67.572;//////70;
     m_binary.set_digits(threshold, threshold, 2);
     m_binary.set_preAmplifier(95);
     m_binary.set_intput_pointer(m_sensor.get_hit_ptr());
-    
-    
-    //_file01->Close();
     gSystem->MakeDirectory(folder_name);
     m_cluster.set_intput_pointer_digitizer(m_binary.digitizer::get_hit_ptr());
+    
 }
 
 void run_simulation::loop(Int_t numberOfEvents) {
@@ -79,9 +77,13 @@ void run_simulation::loop(Int_t numberOfEvents) {
         
         m_hitmaker.ProcessEvent();
         m_sensor.ProcessEvent();
+        m_res.processEvent();
+        
+        
         // m_analog.processEvent();
         m_binary.processEvent();
         m_cluster.processEvent();
+       
        
         
         inStrip = fmod( (m_sensor.hit_position)/pitch_size,3);
@@ -101,9 +103,9 @@ void run_simulation::loop(Int_t numberOfEvents) {
     
         }
      
-        
+
     }
-    
+//
     
         Efficiency =  run_simulation::calculateEfficiency(numberOfEvents, nullclusters);
         Efficiency_err =  run_simulation::calculateErrorEfficiency(numberOfEvents, Efficiency);
@@ -112,19 +114,9 @@ void run_simulation::loop(Int_t numberOfEvents) {
     
     
         tpf_sim = clus_sim->ProfileX("tpf_sim",0,3);
-        
-
-        //*** Draw histos on cluster size vs strip number/charge ***
-           // cluster_canvas = new TCanvas("cluster_canvas","cluster",3000, 500);
-        //        cluster_canvas->Divide(1,3);
-        //        cluster_canvas->cd(1);
-        //        clus_sim->GetXaxis()->SetTitle("strip position");
-        //        clus_sim->GetYaxis()->SetTitle("cluster size");
-        //        clus_sim->Draw("colz");
-        //        clus_sim->ProfileX()->Draw("same");
-        //        cluster_canvas->cd(2);
-        //        clus_data->Draw("colz");
-    
+//        
+//
+//    
     TCanvas *c = new TCanvas("c","", 700,500);
     
     TLegend* l = new TLegend(0.1,0.7,0.48,0.9);
@@ -139,10 +131,12 @@ void run_simulation::loop(Int_t numberOfEvents) {
             l->AddEntry(clus_data,"data run 816 - THL = 70 mV","l");
             l->Draw("same");
 
-        ChiSquare = m_chisquare.getDistributions(tpf_sim,100);
-        std::cout<<"ChiSquare:  "<<ChiSquare<<std::endl;
+     ChiSquare = m_chisquare.getDistributions(tpf_sim,100);
+TFile *pluto = new TFile("Cluster_sim_real.root","RECREATE");
+    tpf_sim->Write();
+    pluto->Close();
         delete clus_sim;
-    
+//    
     
 }
 
@@ -161,7 +155,7 @@ void run_simulation::LoopOnSigma() {
         std::cout<<" Sigma: "<<sigma<<std::endl;
         
         run_simulation::init();
-        run_simulation::loop(10);
+        run_simulation::loop(1);
         
         
         
@@ -176,22 +170,21 @@ void run_simulation::LoopOnSigma() {
 
 void run_simulation::LoopOnSigmaChiSquare() {
     
-    m_sigma_chi = new TH2D("m_sigma_chi", "",100,0,0.07, 100,0,30);
+    m_sigma_chi = new TH2D("m_sigma_chi", "",100,0,0.037, 100,0,30);
     run_simulation::openfiles();
-    for (int k=0; k<1000; k++) {
-        
-        sigma = pitch_size * (0.002*k);
+    
+    for (int k=0; k<100; k++) {
+        sigma = pitch_size * (0.005*k);
         
         //for (int k=0; k<600; k++) {
         
         //  sigma = pitch_size * (0.005*k);
         
         run_simulation::init();
-        run_simulation::loop(10000);
+        run_simulation::loop(60000);
+        
         m_sigma_chi->Fill(sigma, ChiSquare );
-        //std::cout<<"sigma:   "<<sigma<<"chi:  "<<ChiSquare<<std::endl;
-        
-        
+        std::cout<<"sigma:   "<<sigma<<"chi:  "<<ChiSquare<<std::endl;
     }
     m_sigma_chi->GetXaxis()->SetTitle("#sigma [mm]");
     m_sigma_chi->GetYaxis()->SetTitle("#chi^{2}");
@@ -204,7 +197,7 @@ void run_simulation::LoopOnSigmaChiSquare() {
     m_sigma_chi->Draw("colz");
     m_sigma_chi_pfx->Draw("same");
     
-    TF1 *f = new TF1("f","pol4",0,0.15);
+    TF1 *f = new TF1("f","pol4",0,0.037);
     m_sigma_chi_pfx->Fit("f");
     char tmp1[50];
     sprintf(tmp1,"Run 00816: #chi^{2} min for #sigma = %f",f->GetX(f->GetMinimum()));
