@@ -9,10 +9,11 @@
 #include "cluster.cpp"
 #include "TGraphErrors.h"
 #include "CreateChiSquare.cpp"
-#include "Resolution.cpp"
 #include "TAttMarker.h"
 #include "TAttLine.h"
 #include "THistPainter.h"
+#include "crosstalk.cpp"
+
 #define pitch_size  0.074
 
 class run_simulation {
@@ -29,10 +30,12 @@ public:
     void LoopOnSigmaChiSquare();
     Double_t calculateEfficiency(Double_t n_events, Double_t n_null_clusters);
     Double_t calculateErrorEfficiency(Double_t n_events, Double_t eff);
-    Double_t sigma = 0.01;
+    Double_t sigma = 0.011;
     Double_t threshold;
-    
+    void  Gaussian_random();
+    Double_t GaussRan(Double_t hit);
     void run_efficiency();
+    Double_t x_res_eff;
     
 protected:
 //private:
@@ -43,7 +46,7 @@ protected:
     HitAndChargeHist m_HitAndChargeHist;
     digitizer m_analog,m_binary;
     cluster m_cluster;
-    Resolution m_res;
+    crosstalk m_cross;
     
     CreateChiSquare m_chisquare;
     Int_t m_strip_min;
@@ -66,6 +69,7 @@ protected:
     Double_t ChiSquare;
     TGraph *g;
     Double_t npoints;
+    TRandom *rgauss;
 };
 
 //

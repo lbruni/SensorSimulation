@@ -31,6 +31,8 @@ void digitizer::processEvent() {
     
        for (size_t i = 0; i < m_Input_hit->size();++i)
     {
+        
+       //std::cout<<" m_Input_hit->at(i).charge:  "<<m_Input_hit->at(i).charge<<" m_Input_hit->at(i).x "<<m_Input_hit->at(i).x<<std::endl;
         auto charge_in_mv = amplify_signal(m_Input_hit->at(i).charge);
         
         if (charge_in_mv<m_min)
@@ -50,10 +52,14 @@ void digitizer::processEvent() {
             m_hit.push_back(charge_digit);
         }
         
-        
+
         m_charge_digitized[i].x = charge_digit.x;
         m_charge_digitized[i].charge = charge_digit.charge;
-    }
+
+        
+        //std::cout<<" m_charge_digitized[i].x " <<  m_charge_digitized[i].x<<" m_charge_digitized[i].charge  "<<m_charge_digitized[i].charge<<std::endl;
+        
+           }
 
 }
 

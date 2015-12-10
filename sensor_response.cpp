@@ -66,6 +66,7 @@ void sensor_response::ProcessEvent() {
         strip_int = m_strip_position[i].charge;
         pos_x =  m_strip_position[i].x ;
      // std::cout<< "hit x: "<<hit_position<<" posx   "<<pos_x<<"   charge tot:  "<<m_input_hit->charge<<" integrated charge:  "<<charge_computation(i)<<std::endl;
+      
     }
    
 }
@@ -73,3 +74,7 @@ void sensor_response::ProcessEvent() {
 const digitizer* sensor_response::get_digitizer() {
     return &m_digitizer;
 }
+
+
+
+

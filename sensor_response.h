@@ -22,14 +22,13 @@ public:
     Double_t strip_int;
     Double_t generated_charge;
     Double_t pos_x;
-  
-
-   
+     
     Double_t charge_computation(Double_t strip_number);
 
     
 private:
     std::vector<hit_with_charge> m_strip_position;
+    
     Int_t m_max_strip;
     Int_t m_min_strip;
     

@@ -15,8 +15,9 @@ void run_simulation::Strips_under_study(Int_t min_strip, Int_t max_strip) {
 }
 void run_simulation::get_landau() {
     
-    TFile *_file0 = TFile::Open("landau.root");
+    TFile *_file0 = TFile::Open("landau_400.root");
     f = (TF1*)_file0->Get("land");
+   
     _file0->Close();
     
     
@@ -45,21 +46,23 @@ void run_simulation::init() {
     m_sensor.set_charge_sharing(sigma);
     m_sensor.init();
     
-    m_res.set_intput_pointer(m_sensor.get_hit_ptr());
-    m_res.Gaussian_random();
+    
    
     m_analog.set_digits(0.01, 10, 128);
     m_analog.set_preAmplifier(95);
-    m_analog.set_intput_pointer(m_res.get_hit_ptr());
+    m_analog.set_intput_pointer(m_sensor.get_hit_ptr());
     
-    threshold = 67.572;//109.8;//193.2;//151.636;//67.572;//////70;
+    //threshold = 67.572;//109.8;//193.2;//151.636;//67.572;//////70;
     
     m_binary.set_digits(threshold, threshold, 2);
-    m_binary.set_preAmplifier(95);
-    m_binary.set_intput_pointer(m_sensor.get_hit_ptr());
-    
+    //m_binary.set_preAmplifier(95);
+    m_binary.set_preAmplifier(95 + threshold*0.03);
+    m_cross.set_intput_pointer(m_sensor.get_hit_ptr());
+    m_binary.set_intput_pointer(m_cross.get_hit_ptr());
+    run_simulation::Gaussian_random();
     
     gSystem->MakeDirectory(folder_name);
+    
     m_cluster.set_intput_pointer_digitizer(m_binary.digitizer::get_hit_ptr());
     
 }
@@ -83,20 +86,21 @@ void run_simulation::loop(Int_t numberOfEvents) {
         
         m_hitmaker.ProcessEvent();
         m_sensor.ProcessEvent();
-        m_res.processEvent();
-        
-        
+        m_cross.ProcessEvent();
         // m_analog.processEvent();
         m_binary.processEvent();
         m_cluster.processEvent();
        
-       
         
-        inStrip = fmod( (m_sensor.hit_position)/pitch_size,3);
+        x_res_eff =run_simulation::GaussRan(m_sensor.hit_position);
+
+        
+        
+        inStrip = fmod( x_res_eff/pitch_size,3);
         clusterSize = m_cluster.get_cluster_ptr()->cluster_size;
         
-        
-        if ( clusterSize != 0 ){//&&( inStrip > 1 && inStrip <2)){
+       
+        if ( clusterSize != 0 ){
             clus_sim->Fill(inStrip, clusterSize);
             writefile<<" "<<inStrip<<" "<<clusterSize<<" "<<std::endl;
             g1->SetPoint(i,inStrip, clusterSize);
@@ -105,44 +109,42 @@ void run_simulation::loop(Int_t numberOfEvents) {
         else{
             nullclusters++; }
         if(numberOfEvents>1){
-            //processEvent();}
     
         }
-     
-
+       
     }
-//
+
+    
+    
     
         Efficiency =  run_simulation::calculateEfficiency(numberOfEvents, nullclusters);
         Efficiency_err =  run_simulation::calculateErrorEfficiency(numberOfEvents, Efficiency);
-       // std::cout<<" Threshold: "<< threshold <<" Efficiency:  "<<Efficiency<<" Efficiency Error:  "<<Efficiency_err<<std::endl;
+       std::cout<<" Threshold: "<< threshold <<" Efficiency:  "<<Efficiency<<" Efficiency Error:  "<<Efficiency_err<<std::endl;
         
     
     
         tpf_sim = clus_sim->ProfileX("tpf_sim",0,3);
-//        
+//  
+//    TCanvas *c = new TCanvas("c","", 700,500);
+//    
+//    TLegend* l = new TLegend(0.1,0.7,0.48,0.9);
+//    tpf_sim->SetMaximum(5);
+//    tpf_sim->SetMinimum(-1);
+//    tpf_sim->Draw();
+//    tpf_sim->GetYaxis()->SetTitle("Cluster size");
+//    tpf_sim->GetXaxis()->SetTitle("Instrip position");
+//    clus_data->SetLineColor(2);
+//    clus_data->Draw("same");
+//            l->AddEntry(tpf_sim,"simulation","l");
+//            l->AddEntry(clus_data,"data run 816 - THL = 70 mV","l");
+//            l->Draw("same");
 //
-//    
-    TCanvas *c = new TCanvas("c","", 700,500);
-    
-    TLegend* l = new TLegend(0.1,0.7,0.48,0.9);
-    tpf_sim->SetMaximum(5);
-    tpf_sim->SetMinimum(-1);
-    tpf_sim->Draw();
-    tpf_sim->GetYaxis()->SetTitle("Cluster size");
-    tpf_sim->GetXaxis()->SetTitle("Instrip position");
-    clus_data->SetLineColor(2);
-    clus_data->Draw("same");
-            l->AddEntry(tpf_sim,"simulation","l");
-            l->AddEntry(clus_data,"data run 816 - THL = 70 mV","l");
-            l->Draw("same");
-
-     ChiSquare = m_chisquare.getDistributions(tpf_sim,100);
-TFile *pluto = new TFile("Cluster_sim_real.root","RECREATE");
-    tpf_sim->Write();
-    pluto->Close();
+   ChiSquare = m_chisquare.getDistributions(tpf_sim,100);
+//TFile *pluto = new TFile("Cluster_sim_fake.root","RECREATE");
+//    tpf_sim->Write();
+//    pluto->Close();
         delete clus_sim;
-//    
+//
     
 }
 
@@ -176,11 +178,11 @@ void run_simulation::LoopOnSigma() {
 
 void run_simulation::LoopOnSigmaChiSquare() {
     
-    m_sigma_chi = new TH2D("m_sigma_chi", "",100,0,0.037, 100,0,30);
+    m_sigma_chi = new TH2D("m_sigma_chi", "",100,0,0.037, 100,0,15);
     run_simulation::openfiles();
     
-    for (int k=0; k<100; k++) {
-        sigma = pitch_size * (0.005*k);
+    for (int k=0; k<200; k++) {
+        sigma = pitch_size * (0.0025*k);
         
         //for (int k=0; k<600; k++) {
         
@@ -194,7 +196,7 @@ void run_simulation::LoopOnSigmaChiSquare() {
     }
     m_sigma_chi->GetXaxis()->SetTitle("#sigma [mm]");
     m_sigma_chi->GetYaxis()->SetTitle("#chi^{2}");
-    m_sigma_chi_pfx = m_sigma_chi->ProfileX("m_sigma_chi_pfx",10);
+    m_sigma_chi_pfx = m_sigma_chi->ProfileX("m_sigma_chi_pfx",15);
     
     TPaveText *pt2 = new TPaveText(0.04,9.2,0.07,30);
     TText *t2;
@@ -232,7 +234,7 @@ Double_t run_simulation::calculateErrorEfficiency(Double_t n_events, Double_t ef
 
 void run_simulation::run_efficiency(){
     m_scan =  new TGraphErrors(16);
-    
+    Double_t noise = 51;
     Double_t thres[16] = {   67.6,
         109.8,
         151.7,
@@ -251,7 +253,7 @@ void run_simulation::run_efficiency(){
         584.6};
     
     for (int i = 0 ; i<16; i++){
-        threshold = thres[i];
+        threshold = thres[i] + noise;
         run_simulation::openfiles();
         run_simulation::init();
         run_simulation::loop(50000);
@@ -263,14 +265,14 @@ void run_simulation::run_efficiency(){
     m_scan->GetXaxis()->SetTitle("Threshold [mV]");
     m_scan->GetYaxis()->SetTitle("Efficiency");
     m_scan->SetTitle("Efficiency vs Threshold");
-    
-    //TF1 *sCurve = new TF1("sCurve", "([0]/2)*(1+TMath::Erf([1]*(x-[2])/TMath::Sqrt2()))",0, 584.6);
-    //sCurve->SetParameter(0, 1);
-    //sCurve->Draw();
+//    
+//    TF1 *sCurve = new TF1("sCurve", "([0]/2)*(1+TMath::Erf([1]*(x-[2])/TMath::Sqrt2()))",0, 650);
+//    sCurve->SetParameter(0, 1);
+//    sCurve->Draw();
     
     m_scan->Draw("AP");
     m_scan->Write();
-   // m_scan->Fit("sCurve","");
+    //m_scan->Fit("sCurve","");
     scan->SaveAs("Scurve.pdf");
     
     TFile *_file1 = TFile::Open("Scurve_Save.root","RECREATE");
@@ -283,3 +285,18 @@ void run_simulation::run_efficiency(){
 //    std::cout<<" sigma:   :"<<sigma<<" chi:  "<<ChiSquare<<std::endl;
 //    m_sigma_chi->Fill(sigma, ChiSquare );
 //}
+
+
+
+void run_simulation::Gaussian_random(){
+    
+    rgauss = new TRandom2();
+    rgauss->SetSeed(0);
+    
+}
+Double_t run_simulation::GaussRan(Double_t hit){
+    Double_t hit_new;
+    
+    hit_new =  rgauss->Gaus(hit, 0.012);
+    return hit_new;
+}
