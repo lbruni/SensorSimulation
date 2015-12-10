@@ -22,20 +22,24 @@ void cluster::processEvent() {
 
  m_cluster= cluster_struct();
   for (int j =0; j < m_digitized_hit->size(); j++) {
+      
+      
+      
+      
     if (m_digitized_hit->at(j).charge > 0) {
 
       ++m_cluster.cluster_size;
       m_cluster.charge += m_digitized_hit->at(j).charge;
       m_cluster.x += m_digitized_hit->at(j).x*m_digitized_hit->at(j).charge;
       m_cluster.y += m_digitized_hit->at(j).y*m_digitized_hit->at(j).charge;
-
-    } 
+        
+            }
   }
   if (m_cluster.cluster_size>0)
   {
     m_cluster.x /= m_cluster.charge;
     m_cluster.y /= m_cluster.charge;
-  }
+        }
 
   
 

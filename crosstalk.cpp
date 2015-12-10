@@ -58,7 +58,7 @@ void crosstalk::ProcessEvent(){
 
         sum += m_strip_position_crosstalk[i].charge;
         sum_real += m_strip->at(i).charge;
-         std::cout<<"count  "<<count<<" sum  :"<<sum<<"  sum real "<<sum_real<<" cross talk: "<<m_strip_position_crosstalk[i].charge<<" real "<< m_strip->at(i).charge<<std::endl;
+        // std::cout<<"count  "<<count<<" sum  :"<<sum<<"  sum real "<<sum_real<<" cross talk: "<<m_strip_position_crosstalk[i].charge<<" real "<< m_strip->at(i).charge<<std::endl;
     }
 }
 const std::vector<hit_with_charge>* crosstalk::get_hit_ptr() {
