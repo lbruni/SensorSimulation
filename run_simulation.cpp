@@ -55,8 +55,8 @@ void run_simulation::init() {
     //threshold = 67.572;//109.8;//193.2;//151.636;//67.572;//////70;
     
     m_binary.set_digits(threshold, threshold, 2);
-    //m_binary.set_preAmplifier(95);
-    m_binary.set_preAmplifier(95 + threshold*0.03);
+    m_binary.set_preAmplifier(95);
+    //m_binary.set_preAmplifier(95 + TMath::Power((threshold*0.03),2));
     m_cross.set_intput_pointer(m_sensor.get_hit_ptr());
     m_binary.set_intput_pointer(m_cross.get_hit_ptr());
     run_simulation::Gaussian_random();
@@ -233,10 +233,13 @@ Double_t run_simulation::calculateErrorEfficiency(Double_t n_events, Double_t ef
 
 
 void run_simulation::run_efficiency(){
-    m_scan =  new TGraphErrors(16);
-    Double_t noise = 51;
-    Double_t thres[16] = {   67.6,
+    m_scan =  new TGraphErrors(17);
+    Double_t noise = 51.0;
+    Double_t thres[17] = { 44.0,
+        67.6,
+        90.0,
         109.8,
+        130.0,
         151.7,
         193.2,
         234.6,
@@ -248,16 +251,15 @@ void run_simulation::run_efficiency(){
         471.2,
         504.0,
         533.1,
-        555.9,
-        572.4,
-        584.6};
+        549.0,
+        };
     
-    for (int i = 0 ; i<16; i++){
-        threshold = thres[i] + noise;
+    for (int i = 0 ; i<17; i++){
+        threshold = thres[i];
         run_simulation::openfiles();
         run_simulation::init();
         run_simulation::loop(50000);
-        m_scan->SetPoint(i, thres[i], Efficiency);
+        m_scan->SetPoint(i, thres[i]+noise, Efficiency);
         m_scan->SetPointError(i,0,Efficiency_err);
     }
     
@@ -295,7 +297,7 @@ void run_simulation::Gaussian_random(){
     
 }
 Double_t run_simulation::GaussRan(Double_t hit){
-    Double_t hit_new;
+    Double_t hit_newfT;
     
     hit_new =  rgauss->Gaus(hit, 0.012);
     return hit_new;

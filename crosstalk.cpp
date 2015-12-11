@@ -37,7 +37,7 @@ void crosstalk::ProcessEvent(){
             max =  m_strip->at(k).charge;
         }
         
-        scale_factor =(max*0.01);
+        scale_factor =(max*0.1);
     
     }
     
