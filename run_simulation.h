@@ -13,6 +13,7 @@
 #include "TAttLine.h"
 #include "THistPainter.h"
 #include "crosstalk.cpp"
+#include "addPedestal.cpp"
 
 #define pitch_size  0.074
 
@@ -47,6 +48,7 @@ protected:
     digitizer m_analog,m_binary;
     cluster m_cluster;
     crosstalk m_cross;
+    addPedestal m_pedestal;
     
     CreateChiSquare m_chisquare;
     Int_t m_strip_min;

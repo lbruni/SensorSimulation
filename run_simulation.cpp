@@ -49,16 +49,20 @@ void run_simulation::init() {
     
    
     m_analog.set_digits(0.01, 10, 128);
-    m_analog.set_preAmplifier(95);
+    m_analog.set_preAmplifier(95 , 0.03);
     m_analog.set_intput_pointer(m_sensor.get_hit_ptr());
-    
     //threshold = 67.572;//109.8;//193.2;//151.636;//67.572;//////70;
     
     m_binary.set_digits(threshold, threshold, 2);
-    m_binary.set_preAmplifier(95);
-    //m_binary.set_preAmplifier(95 + TMath::Power((threshold*0.03),2));
+    m_binary.set_preAmplifier(95 , 0.00);
+    
     m_cross.set_intput_pointer(m_sensor.get_hit_ptr());
-    m_binary.set_intput_pointer(m_cross.get_hit_ptr());
+    m_pedestal.set_pedestal_value(0.54);
+    m_pedestal.set_intput_pointer(m_cross.get_hit_ptr());
+    
+    
+    m_binary.set_intput_pointer(m_pedestal.get_hit_ptr());
+    
     run_simulation::Gaussian_random();
     
     gSystem->MakeDirectory(folder_name);
@@ -74,8 +78,7 @@ void run_simulation::loop(Int_t numberOfEvents) {
     
     //*** Declaration of histos on cluster size vs strip number/charge ***
     clus_sim= new TH2D("clus_sim","Cluster size vs instrip position", 100, 0, 3 ,10 , -0.5, 9.5);
-    TGraph *g1= new TGraph(100);
-    Int_t nullclusters = 0;
+       Int_t nullclusters = 0;
     
     
     ofstream writefile;
@@ -87,6 +90,7 @@ void run_simulation::loop(Int_t numberOfEvents) {
         m_hitmaker.ProcessEvent();
         m_sensor.ProcessEvent();
         m_cross.ProcessEvent();
+        m_pedestal.ProcessEvent();
         // m_analog.processEvent();
         m_binary.processEvent();
         m_cluster.processEvent();
@@ -103,7 +107,6 @@ void run_simulation::loop(Int_t numberOfEvents) {
         if ( clusterSize != 0 ){
             clus_sim->Fill(inStrip, clusterSize);
             writefile<<" "<<inStrip<<" "<<clusterSize<<" "<<std::endl;
-            g1->SetPoint(i,inStrip, clusterSize);
         }
 
         else{
@@ -124,9 +127,9 @@ void run_simulation::loop(Int_t numberOfEvents) {
     
     
         tpf_sim = clus_sim->ProfileX("tpf_sim",0,3);
-//  
-//    TCanvas *c = new TCanvas("c","", 700,500);
-//    
+  
+  //  TCanvas *c = new TCanvas("c","", 700,500);
+    
 //    TLegend* l = new TLegend(0.1,0.7,0.48,0.9);
 //    tpf_sim->SetMaximum(5);
 //    tpf_sim->SetMinimum(-1);
@@ -134,13 +137,14 @@ void run_simulation::loop(Int_t numberOfEvents) {
 //    tpf_sim->GetYaxis()->SetTitle("Cluster size");
 //    tpf_sim->GetXaxis()->SetTitle("Instrip position");
 //    clus_data->SetLineColor(2);
-//    clus_data->Draw("same");
-//            l->AddEntry(tpf_sim,"simulation","l");
-//            l->AddEntry(clus_data,"data run 816 - THL = 70 mV","l");
-//            l->Draw("same");
+    
+    //clus_data->Draw("same");
+       //     l->AddEntry(tpf_sim,"simulation","l");
+            //l->AddEntry(clus_sim),"data run 816 - THL = 70 mV","l");
+    //        l->Draw("same");
 //
    ChiSquare = m_chisquare.getDistributions(tpf_sim,100);
-//TFile *pluto = new TFile("Cluster_sim_fake.root","RECREATE");
+//TFile *pluto = new TFile("Cluster_sim.root","RECREATE");
 //    tpf_sim->Write();
 //    pluto->Close();
         delete clus_sim;
@@ -234,7 +238,7 @@ Double_t run_simulation::calculateErrorEfficiency(Double_t n_events, Double_t ef
 
 void run_simulation::run_efficiency(){
     m_scan =  new TGraphErrors(17);
-    Double_t noise = 51.0;
+    
     Double_t thres[17] = { 44.0,
         67.6,
         90.0,
@@ -259,7 +263,7 @@ void run_simulation::run_efficiency(){
         run_simulation::openfiles();
         run_simulation::init();
         run_simulation::loop(50000);
-        m_scan->SetPoint(i, thres[i]+noise, Efficiency);
+        m_scan->SetPoint(i, thres[i], Efficiency);
         m_scan->SetPointError(i,0,Efficiency_err);
     }
     

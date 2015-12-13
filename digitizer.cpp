@@ -13,8 +13,9 @@ void digitizer::set_digits(Double_t min_charge, Double_t max_charge, Int_t steps
     m_steps = (max_charge - min_charge)/(Double_t)steps;
 }
 
-void digitizer::set_preAmplifier(Double_t Amplification) {
+void digitizer::set_preAmplifier(Double_t Amplification, Double_t Amplification_degradation) {
     m_amplification = Amplification;
+    m_amplification_degradation = Amplification_degradation;
 }
 
 void digitizer::processEvent() {
@@ -68,5 +69,5 @@ const std::vector<hit_with_charge>* digitizer::get_hit_ptr() const {
 }
 
 Double_t digitizer::amplify_signal(Double_t charge_signal) const {
-    return charge_signal*m_amplification;
+     return charge_signal*m_amplification*(1- m_amplification_degradation * charge_signal) ;
 }
