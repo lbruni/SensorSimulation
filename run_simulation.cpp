@@ -54,7 +54,7 @@ void run_simulation::init() {
     //threshold = 67.572;//109.8;//193.2;//151.636;//67.572;//////70;
     
     m_binary.set_digits(threshold, threshold, 2);
-    m_binary.set_preAmplifier(95 , 0.00);
+    m_binary.set_preAmplifier(95 , 0.03);
     
     m_cross.set_intput_pointer(m_sensor.get_hit_ptr());
     m_pedestal.set_pedestal_value(0.54);
